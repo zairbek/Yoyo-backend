@@ -30,7 +30,7 @@ services:
       networks:
         - backend # Используем сеть backend
       depends_on:
-        - mysql
+        - postgres
 
     cron:
       build:
@@ -56,7 +56,7 @@ services:
       networks:
         - backend
       depends_on:
-        - mysql
+        - postgres
 
 
 ### NGINX Server #########################################
