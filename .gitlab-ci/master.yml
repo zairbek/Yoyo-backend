@@ -1,0 +1,274 @@
+###############################################################
+### Development ###############################################
+###############################################################
+
+.variables: &variables
+  variables:
+    IMAGE_PHP_FPM: $CI_REGISTRY_IMAGE/dev/php_fpm:$CI_COMMIT_SHORT_SHA
+    IMAGE_PHP_FPM_LATEST: $CI_REGISTRY_IMAGE/dev/php_fpm:latest
+    IMAGE_NGINX: $CI_REGISTRY_IMAGE/dev/nginx:$CI_COMMIT_SHORT_SHA
+    IMAGE_WORKSPACE: $CI_REGISTRY_IMAGE/dev/workspase:$CI_COMMIT_SHORT_SHA
+    IMAGE_REDIS: $CI_REGISTRY_IMAGE/dev/redis:$CI_COMMIT_SHORT_SHA
+    IMAGE_MYSQL: $CI_REGISTRY_IMAGE/dev/mysql:$CI_COMMIT_SHORT_SHA
+
+.dev: &dev
+  tags:
+    - backend-future-develop
+  <<: *variables
+
+.branch: &branch
+  refs:
+    - master
+
+.environment: &environment
+  environment:
+    name: Development
+
+.redis_only: &redis_only
+  changes:
+    - .docker/redis/**/*
+    - .gitlab-ci.yml
+
+.mysql_only: &mysql_only
+  changes:
+    - .docker/mysql/**/*
+    - .gitlab-ci.yml
+
+.nginx_only: &nginx_only
+  changes:
+    - .docker/nginx/**/*
+    - webpack.mix.js
+    - package.json
+    - resources/js/**/*
+    - resources/sass/**/*
+    - resources/img/**/*
+    - .gitlab-ci.yml
+
+
+###############################################################
+### Build php-fpm #############################################
+build:php-fpm:
+  stage: init
+  <<: *dev
+  extends: .login
+  script:
+    - docker build -t $IMAGE_PHP_FPM -t $IMAGE_PHP_FPM_LATEST -f .docker/php-fpm/alpine/Dockerfile .
+    - docker push $IMAGE_PHP_FPM
+    - docker push $IMAGE_PHP_FPM_LATEST
+  only:
+    changes:
+      - .docker/php-fpm-alpine/**/*
+    <<: *branch
+
+### Build App ##################################################
+build:app:
+  stage: build:app
+  <<: *dev
+  extends: .cache
+  image: $IMAGE_PHP_FPM_LATEST
+  script:
+#    - composer check-platform-req
+    - composer config http-basic.gitlab.com ___token___ $GITLAB_TOKEN
+    - composer install --no-progress
+    - npm install --no-progress
+    - npm run production
+  artifacts:
+    paths:
+      - public/dist
+      - vendor/
+  only:
+    <<: *branch
+
+### Build Nginx Docker Image #################################
+build:nginx:
+  stage: build:images
+  <<: *dev
+  extends:
+    - .cache
+    - .login
+  script:
+    - docker build -t $IMAGE_NGINX -f .docker/nginx/Dockerfile .
+    - docker push $IMAGE_NGINX
+  cache:
+    policy: pull
+  only:
+    <<: *branch
+    <<: *nginx_only
+
+### Build Workspace Docker Image #############################
+build:workspase:
+  stage: build:images
+  <<: *dev
+  extends:
+    - .cache
+    - .login
+  script:
+    - docker build --build-arg IMAGE_PHP_FPM_LATEST=$IMAGE_PHP_FPM_LATEST -t $IMAGE_WORKSPACE -f .docker/workspace/Dockerfile .
+    - docker push $IMAGE_WORKSPACE
+  cache:
+    policy: pull
+  only:
+    <<: *branch
+  needs:
+    - build:app
+
+### Build Redis Docker Image #################################
+build:redis:
+  stage: build:images
+  <<: *dev
+  extends:
+    - .cache
+    - .login
+  script:
+    - docker build -t $IMAGE_REDIS -f .docker/redis/Dockerfile .
+    - docker push $IMAGE_REDIS
+  cache:
+    policy: pull
+  only:
+    <<: *branch
+    <<: *redis_only
+
+### Build Mysql Docker Image #################################
+build:mysql:
+  stage: build:images
+  <<: *dev
+  extends:
+    - .cache
+    - .login
+  script:
+    - docker build -t $IMAGE_MYSQL -f .docker/mysql/Dockerfile .
+    - docker push $IMAGE_MYSQL
+  cache:
+    policy: pull
+  only:
+    <<: *branch
+    <<: *mysql_only
+
+###############################################################
+### Deploying To Development ##################################
+
+### Deploying Nginx Image #####################################
+'Deploying NGINX to dev':
+  stage: deploy
+  <<: *dev
+  <<: *environment
+  image: docker:latest
+  services:
+    - docker:dind
+  extends: .login
+  script:
+    - docker pull ${IMAGE_NGINX}
+    - docker stack deploy --with-registry-auth -c .docker/nginx/docker-stack.yml ${CI_PROJECT_NAME}
+  only:
+    <<: *branch
+    <<: *nginx_only
+  needs:
+    - build:nginx
+
+### Deploying Workspace Image ################################
+'Deploying WORKSPACE_APP to dev':
+  stage: deploy
+  <<: *dev
+  <<: *environment
+  image: docker:latest
+  services:
+    - docker:dind
+  extends: .login
+  script:
+    - docker pull ${IMAGE_WORKSPACE}
+    - docker stack deploy --with-registry-auth -c .docker/workspace/docker-stack.app.yml ${CI_PROJECT_NAME}
+  only:
+    <<: *branch
+  needs:
+    - build:workspase
+
+### Deploying Workspace Image ################################
+'Deploying WORKSPACE_CRON to dev':
+  stage: deploy
+  <<: *dev
+  <<: *environment
+  image: docker:latest
+  services:
+    - docker:dind
+  extends: .login
+  script:
+    - docker pull ${IMAGE_WORKSPACE}
+    - docker stack deploy --with-registry-auth -c .docker/workspace/docker-stack.cron.yml ${CI_PROJECT_NAME}
+  only:
+    <<: *branch
+  needs:
+    - build:workspase
+
+### Deploying Workspace Image ################################
+'Deploying WORKSPACE_QUEUE to dev':
+  stage: deploy
+  <<: *dev
+  <<: *environment
+  image: docker:latest
+  services:
+    - docker:dind
+  extends: .login
+  script:
+    - docker pull ${IMAGE_WORKSPACE}
+    - docker stack deploy --with-registry-auth -c .docker/workspace/docker-stack.queue.yml ${CI_PROJECT_NAME}
+  only:
+    <<: *branch
+  needs:
+    - build:workspase
+
+### Deploying Redis Image #####################################
+'Deploying REDIS to dev':
+  stage: deploy
+  <<: *dev
+  <<: *environment
+  image: docker:latest
+  services:
+    - docker:dind
+  extends: .login
+  script:
+    - docker pull ${IMAGE_REDIS}
+    - docker stack deploy --with-registry-auth -c .docker/redis/docker-stack.yml ${CI_PROJECT_NAME}
+  only:
+    <<: *branch
+    <<: *redis_only
+  needs:
+    - build:redis
+
+### Deploying Redis Image #####################################
+'Deploying MYSQL to dev':
+  stage: deploy
+  <<: *dev
+  <<: *environment
+  image: docker:latest
+  services:
+    - docker:dind
+  extends: .login
+  script:
+    - docker pull ${IMAGE_MYSQL}
+    - docker stack deploy --with-registry-auth -c .docker/mysql/docker-stack.yml ${CI_PROJECT_NAME}
+  only:
+    <<: *branch
+    <<: *mysql_only
+  needs:
+    - build:mysql
+
+################################################################
+### Configuring Workspace #######################################
+#'Configuring WORKSPACE':
+#  stage: configuring
+#  <<: *dev
+#  <<: *environment
+#  image: docker:latest
+#  services:
+#    - docker:dind
+#  script:
+#    - workspace=$(docker ps -q --filter name=${CI_PROJECT_NAME}_php-fpm)
+#    - docker exec ${workspace} php artisan config:cache
+#    - docker exec ${workspace} php artisan view:cache
+#    - docker exec ${workspace} php artisan l5-swagger:generate
+#  needs: ['Deploying WORKSPACE to dev']
+#  only:
+#    <<: *branch
+
+### End Development ############################################
+################################################################

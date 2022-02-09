@@ -1,0 +1,18 @@
+version: "3.8"
+
+networks:
+  network:
+
+services:
+  mysql:
+    image: $IMAGE_MYSQL
+    environment:
+      TZ: "Europe/Moscow"
+      MYSQL_DATABASE: $DB_DATABASE
+      MYSQL_USER: $DB_USERNAME
+      MYSQL_PASSWORD: $DB_PASSWORD
+      MYSQL_ROOT_PASSWORD: $DB_ROOT_PASSWORD
+    volumes:
+      - $STORAGE_DIR/docker/mysql:/var/lib/mysql # Именованный тома перекидываем внутр контейнер
+    networks:
+      - network

@@ -1,0 +1,131 @@
+version: '3.8'
+
+networks:
+  backend:
+    driver: bridge
+
+volumes: # Именованные тома: Когда мы указываем mysql: driver: local,
+         # docker автоматом создаст папку тут: (linux|mac) /var/lib/docker/volumes/
+         # и папка будет храниться пока сам не удалишь
+  postgresql: # Имя волюма
+  mysql: # Имя волюма
+    driver: local
+  redis: # Имя волюма
+    driver: local
+
+services:
+
+### PHP-FPM ##############################################
+    app:
+      build: # build - если мы собираем из dockerfile
+        context: . # context - Либо путь к каталогу, содержащему Dockerfile, либо URL-адрес репозитория git.
+                   # Если предоставленное значение является относительным путем, оно интерпретируется относительно
+                   # местоположения файла Compose. Этот каталог также является контекстом сборки, который отправляется демону Docker.
+        dockerfile: .docker/php-fpm/alpine/Dockerfile # Путь до файла Dockerfile
+      volumes:
+        - .:/var/www # Прокидываем текущую папку во внутрь контейнера /var/www
+      environment:
+        APP_ENV: local
+        CONTAINER_ROLE: app
+      networks:
+        - backend # Используем сеть backend
+      depends_on:
+        - mysql
+
+    cron:
+      build:
+        context: .
+        dockerfile: .docker/php-fpm/alpine/Dockerfile
+      volumes:
+        - .:/var/www
+      environment:
+        APP_ENV: local
+        CONTAINER_ROLE: cron
+      networks:
+        - backend
+
+    queue:
+      build:
+        context: .
+        dockerfile: .docker/php-fpm/alpine/Dockerfile
+      volumes:
+        - .:/var/www
+      environment:
+        APP_ENV: local
+        CONTAINER_ROLE: queue
+      networks:
+        - backend
+      depends_on:
+        - mysql
+
+
+### NGINX Server #########################################
+    nginx:
+      build: # build - если мы собираем из dockerfile
+        context: . # context - Либо путь к каталогу, содержащему Dockerfile, либо URL-адрес репозитория git.
+                   # Если предоставленное значение является относительным путем, оно интерпретируется относительно
+                   # местоположения файла Compose. Этот каталог также является контекстом сборки, который отправляется демону Docker.
+        dockerfile: .docker/nginx/Dockerfile # Путь до файла Dockerfile
+      volumes:
+        - .:/var/www # Прокидываем папку во внутрь контейнера nginx
+#        - ./storage/app/public:/var/www/public/storage # Прокидываем папку storage во внутрь контейнера nginx что бы было доступно статика
+      ports:
+        - 80:80 # Открываем и пробрасываем порты для nginx
+        - 443:443 # ssl работает с самописмым сертификатом
+      depends_on:
+      - app
+      networks:
+        - backend # Используем сеть backend
+
+### MySQL ################################################
+#    mysql:
+#      build:
+#        context: .
+#        dockerfile: .docker/mysql/Dockerfile
+#      environment: # Переменные окружения. environments передает данные внутр контейнера с помощью переменные окружение.
+#                   # Для интереса можно зайти внутр контейнера и выполнить echo $MYSQL_DATABASE
+#        TZ: "Europe/Moscow" # Список доступных environments можно найти на странице image docker hub -> https://registry.hub.docker.com/_/mysql
+#        MYSQL_DATABASE: laravel
+#        MYSQL_USER: laravel
+#        MYSQL_PASSWORD: laravel
+#        MYSQL_ROOT_PASSWORD: 1
+#      ports:
+#        - 3306:3306 # Открываем и пробрасываем порты для nginx
+#      volumes:
+#        - mysql:/var/lib/mysql # Именованный тома перекидываем внутр контейнер
+#      networks:
+#        - backend # Используем сеть backend
+
+### PostgreSql ################################################
+    postgres:
+      image: postgres:14
+      environment:
+        POSTGRES_DB: laravel
+        POSTGRES_USER: laravel
+        POSTGRES_PASSWORD: laravel
+      ports:
+        - 5432:5432
+      volumes:
+        - postgresql:/var/lib/postgresql
+      networks:
+        - backend
+
+### Redis ###############################################
+    redis: # Почти то же самое
+      build:
+        context: .
+        dockerfile: .docker/redis/Dockerfile
+      ports:
+        - 6379:6379
+      volumes:
+        - redis:/data
+      networks:
+        - backend
+
+### Adminer ###############################################
+    adminer: # Почти то же самое
+      image: adminer
+      ports:
+        - 8080:8080
+      networks:
+        - backend

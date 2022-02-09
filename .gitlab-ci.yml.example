@@ -1,0 +1,28 @@
+###############################################################
+### Global ####################################################
+###############################################################
+stages:
+  - init
+  - build:app
+#  - test
+  - build:images
+  - deploy
+  - deploy:prod
+  - configuring
+
+.cache: &cache
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+      - node_modules/
+      - public/dist/
+      - vendor/
+    policy: pull-push
+
+.login: &login
+  before_script:
+    - echo $CI_JOB_TOKEN | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
+
+include:
+  - local: '/.gitlab-ci/master.yml'
+
