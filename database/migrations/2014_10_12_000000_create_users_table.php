@@ -25,6 +25,7 @@ return new class extends Migration
             $table->rememberToken();
             $table->timestamp('online_at')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

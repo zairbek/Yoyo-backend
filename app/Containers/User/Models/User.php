@@ -3,8 +3,10 @@
 namespace App\Containers\User\Models;
 
 use App\Ship\Core\Abstracts\Models\UserModel;
+use Database\Factories\UserFactory;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
 
@@ -12,6 +14,7 @@ class User extends UserModel
 {
     use HasFactory;
     use Notifiable;
+    use SoftDeletes;
     use HasApiTokens;
 
     /**
@@ -20,9 +23,12 @@ class User extends UserModel
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
+        'login',
         'email',
         'password',
+        'first_name',
+        'last_name',
+        'middle_name',
     ];
 
     /**
@@ -42,5 +48,11 @@ class User extends UserModel
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'online_at' => 'datetime'
     ];
+
+    protected static function newFactory()
+    {
+        return UserFactory::class;
+    }
 }
