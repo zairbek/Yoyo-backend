@@ -8,11 +8,11 @@ abstract class MainProvider extends LaravelServiceProvider
 {
     public function boot()
     {
-
+        //
     }
 
     public function register()
     {
-
+        //
     }
 }
