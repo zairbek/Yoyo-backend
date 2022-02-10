@@ -1,4 +1,4 @@
-FROM php:8-fpm-alpine3.13
+FROM php:8.1-fpm-alpine3.14
 
 RUN apk update \
     && pecl channel-update pecl.php.net \
