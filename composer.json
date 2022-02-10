@@ -55,7 +55,9 @@
         ],
         "post-create-project-cmd": [
             "@php artisan key:generate --ansi"
-        ]
+        ],
+        "psalm":  "./vendor/bin/psalm",
+        "phpcs":  "./vendor/bin/phpcs"
     },
     "extra": {
         "laravel": {
