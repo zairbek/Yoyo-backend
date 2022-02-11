@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Containers\User\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
@@ -10,6 +11,7 @@ use Illuminate\Support\Str;
  */
 class UserFactory extends Factory
 {
+    protected $model = User::class;
     /**
      * Define the model's default state.
      *
@@ -28,6 +30,9 @@ class UserFactory extends Factory
             'first_name' => $this->faker->firstName,
             'last_name' => $this->faker->lastName,
             'middle_name' => null,
+            'phone_number' => $this->faker->phoneNumber,
+            'birthday' => $this->faker->dateTime,
+            'active' => $this->faker->boolean,
             'online_at' => $this->faker->dateTime,
             'created_at' => $this->faker->dateTime,
             'updated_at' => $this->faker->dateTime,

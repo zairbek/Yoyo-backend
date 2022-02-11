@@ -51,8 +51,8 @@ class User extends UserModel
         'online_at' => 'datetime'
     ];
 
-    protected static function newFactory()
+    protected static function newFactory(): UserFactory
     {
-        return UserFactory::class;
+        return new UserFactory();
     }
 }
