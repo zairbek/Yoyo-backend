@@ -92,5 +92,4 @@ class UserRepository extends Repository
             default => $this->query,
         };
     }
-
 }

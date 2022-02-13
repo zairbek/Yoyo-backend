@@ -1,6 +1,6 @@
 <?php
 
-use Illuminate\Http\Request;
+use App\Containers\Authentication\UI\API\Backoffice\Controllers\SignInController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,6 +14,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::group(['as' => 'backoffice.', 'middleware' => ['client.credentials']], static function () {
+    Route::group(['prefix' => 'auth'], static function () {
+        Route::post('sign-in', [SignInController::class, 'signIn'])->name('signIn');
+    });
 });

@@ -51,5 +51,4 @@ class RoleRepository extends Repository
             default => $this->query,
         };
     }
-
 }

@@ -47,5 +47,4 @@ class PermissionRepository extends Repository
             default => $this->query,
         };
     }
-
 }
