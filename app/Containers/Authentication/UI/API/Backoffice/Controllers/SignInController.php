@@ -4,11 +4,9 @@ namespace App\Containers\Authentication\UI\API\Backoffice\Controllers;
 
 use App\Containers\Authentication\UI\API\Backoffice\Requests\SignInRequest;
 use App\Ship\Core\Abstracts\Controllers\ApiController;
-use App\Containers\Authentication\Adapters\Cookie as CookieAdapter;
 use App\Containers\Authentication\Adapters\Passport as PassportAdapter;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Response;
 use Illuminate\Validation\ValidationException;
 use JsonException;
 use League\OAuth2\Server\Exception\OAuthServerException;
@@ -65,22 +63,5 @@ class SignInController extends ApiController
         throw ValidationException::withMessages([
             'email' => [trans('auth.failed')],
         ]);
-    }
-
-    /**
-     * @param array $tokens
-     * @return JsonResponse
-     */
-    protected function sendLoginResponse(array $tokens): JsonResponse
-    {
-        return Response::json([
-                'token' => [
-                    'token_type' => $tokens['token_type'],
-                    'expires_in' => $tokens['expires_in'],
-                    'access_token' => $tokens['access_token'],
-                ]
-            ])
-            ->withCookie(CookieAdapter::make($tokens['refresh_token']))
-            ;
     }
 }
