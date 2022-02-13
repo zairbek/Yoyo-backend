@@ -50,6 +50,8 @@ class User extends UserModel
     protected $hidden = [
         'password',
         'remember_token',
+        'active',
+        'properties',
     ];
 
     /**
@@ -60,7 +62,7 @@ class User extends UserModel
     protected $casts = [
         'email_verified_at' => 'datetime',
         'online_at' => 'datetime',
-        'birthday' => 'datetime',
+        'birthday' => 'datetime:Y.m.d',
         'active' => 'boolean',
         'properties' => 'array',
     ];
