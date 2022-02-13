@@ -10,8 +10,8 @@ use Illuminate\Support\Collection;
 use RuntimeException;
 
 abstract class Repository
-{public Model $model;
-
+{
+    public Model $model;
     public Builder $query;
 
     /**
@@ -39,13 +39,15 @@ abstract class Repository
         $model = app($this->model());
 
         if (!$model instanceof Model) {
-            throw new RuntimeException("Class {$this->model()} must be an instance of Illuminate\\Database\\Eloquent\\Model");
+            throw new RuntimeException(
+                "Class {$this->model()} must be an instance of Illuminate\\Database\\Eloquent\\Model"
+            );
         }
 
         return $this->model = $model;
     }
 
-    protected function afterMakeBuilder()
+    protected function afterMakeBuilder(): void
     {
         //
     }
@@ -91,8 +93,23 @@ abstract class Repository
      * @param int|null $page
      * @return LengthAwarePaginator
      */
-    public function paginate(?int $perPage = null, array $columns = ['*'], string $pageName = 'page', ?int $page = null): LengthAwarePaginator
-    {
+    public function paginate(
+        ?int $perPage = null,
+        array $columns = ['*'],
+        string $pageName = 'page',
+        ?int $page = null
+    ): LengthAwarePaginator {
         return $this->query->paginate($perPage, $columns, $pageName, $page);
+    }
+
+    /**
+     * @param array $values
+     * @param $uniqueBy
+     * @param null $update
+     * @return int
+     */
+    public function upsert(array $values, $uniqueBy, $update = null): int
+    {
+        return $this->query->upsert($values, $uniqueBy, $update);
     }
 }

@@ -24,7 +24,7 @@ class UserSeeder extends Seeder
     {
         collect(self::USERS)->each(function ($item, $role) use ($repository) {
             $repository->updateOrCreate(
-                ['email' => $item['email']],
+                ['login' => explode('@', $item['email'])[0], 'email' => $item['email']],
                 ['first_name' => $item['first_name'], 'password' => $item['password']],
                 $role
             );
