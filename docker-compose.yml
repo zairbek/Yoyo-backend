@@ -32,31 +32,31 @@ services:
       depends_on:
         - postgres
 
-    cron:
-      build:
-        context: .
-        dockerfile: .docker/php-fpm/alpine/Dockerfile
-      volumes:
-        - .:/var/www
-      environment:
-        APP_ENV: local
-        CONTAINER_ROLE: cron
-      networks:
-        - backend
-
-    queue:
-      build:
-        context: .
-        dockerfile: .docker/php-fpm/alpine/Dockerfile
-      volumes:
-        - .:/var/www
-      environment:
-        APP_ENV: local
-        CONTAINER_ROLE: queue
-      networks:
-        - backend
-      depends_on:
-        - postgres
+#    cron:
+#      build:
+#        context: .
+#        dockerfile: .docker/php-fpm/alpine/Dockerfile
+#      volumes:
+#        - .:/var/www
+#      environment:
+#        APP_ENV: local
+#        CONTAINER_ROLE: cron
+#      networks:
+#        - backend
+#
+#    queue:
+#      build:
+#        context: .
+#        dockerfile: .docker/php-fpm/alpine/Dockerfile
+#      volumes:
+#        - .:/var/www
+#      environment:
+#        APP_ENV: local
+#        CONTAINER_ROLE: queue
+#      networks:
+#        - backend
+#      depends_on:
+#        - postgres
 
 
 ### NGINX Server #########################################

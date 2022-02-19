@@ -32,6 +32,7 @@ class UserFactory extends Factory
             'middle_name' => null,
             'phone_number' => $this->faker->numerify('7#########'),
             'birthday' => $this->faker->dateTime,
+            'gender' => $this->faker->randomElement(['male', 'female']),
             'active' => $this->faker->boolean,
             'online_at' => $this->faker->dateTime,
             'created_at' => $this->faker->dateTime,
