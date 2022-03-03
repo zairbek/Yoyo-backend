@@ -27,7 +27,8 @@ return new class extends Migration
             $table->dateTime('birthday')->nullable()->comment('Дата рождение');
             $table->enum('gender', ['male', 'female'])->nullable()->comment('Пол');
 
-            $table->boolean('active')->default(true)->comment('Активность');
+            $table->foreignId('user_status_id')->nullable()->constrained()->nullOnDelete();
+
             $table->json('properties')->nullable()->comment('Вдруг понадобится что-то добавить');
 
             $table->rememberToken();

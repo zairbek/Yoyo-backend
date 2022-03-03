@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::group(['as' => 'backoffice.'], static function () {
+Route::group(['prefix' => 'v1', 'as' => 'backoffice.'], static function () {
     Route::group(['prefix' => 'auth'], static function () {
         Route::group(['middleware' => ['client.credentials']], static function () {
             Route::post('sign-in', [SignInController::class, 'signIn'])->name('signIn');

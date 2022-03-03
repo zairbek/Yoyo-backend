@@ -2,7 +2,7 @@
 
 namespace App\Containers\User\Models;
 
-use App\Containers\User\Enums\GenderEnum;
+use App\Containers\User\Enums\Gender;
 use App\Ship\Core\Abstracts\Models\UserModel;
 use Database\Factories\UserFactory;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -67,7 +67,7 @@ class User extends UserModel
         'birthday' => 'datetime:Y.m.d',
         'active' => 'boolean',
         'properties' => 'array',
-        'gender' => GenderEnum::class
+        'gender' => Gender::class
     ];
 
     protected static function newFactory(): UserFactory

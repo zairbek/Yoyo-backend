@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Containers\User\Enums\Gender;
 use App\Containers\User\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
@@ -22,7 +23,7 @@ class UserFactory extends Factory
         $email = $this->faker->unique()->safeEmail();
 
         return [
-            'login' => explode('@', $email)[0],
+            'login' => $email,
             'email' => $email,
             'email_verified_at' => now(),
             'password' => 'password',
@@ -32,8 +33,7 @@ class UserFactory extends Factory
             'middle_name' => null,
             'phone_number' => $this->faker->numerify('7#########'),
             'birthday' => $this->faker->dateTime,
-            'gender' => $this->faker->randomElement(['male', 'female']),
-            'active' => $this->faker->boolean,
+            'gender' => $this->faker->randomElement(Gender::cases()),
             'online_at' => $this->faker->dateTime,
             'created_at' => $this->faker->dateTime,
             'updated_at' => $this->faker->dateTime,

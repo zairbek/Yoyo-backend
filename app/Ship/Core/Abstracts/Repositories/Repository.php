@@ -62,7 +62,7 @@ abstract class Repository
      * @param array $value
      * @return Model
      */
-    public function updateOrCreate($attributes, $value = []): Model
+    public function updateOrCreate($attributes, array $value = []): Model
     {
         return $this->model()::updateOrCreate(
             $attributes,

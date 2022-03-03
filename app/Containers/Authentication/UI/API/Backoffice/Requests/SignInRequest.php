@@ -15,6 +15,21 @@ class SignInRequest extends Request
     }
 
     /**
+     *  @OA\Schema(
+     *     schema="SignInRequest",
+     *     required={"email", "password"},
+     *     @OA\Property(
+     *          property="email",
+     *          type="string",
+     *          example="test@test.ru",
+     *     ),
+     *     @OA\Property(
+     *          property="password",
+     *          type="string",
+     *          example="123456",
+     *     ),
+     * )
+     *
      * @inheritDoc
      */
     public function rules(): array

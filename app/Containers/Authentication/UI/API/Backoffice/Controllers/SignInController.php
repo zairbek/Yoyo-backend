@@ -14,6 +14,68 @@ use League\OAuth2\Server\Exception\OAuthServerException;
 class SignInController extends ApiController
 {
     /**
+     *  @OA\Post(
+     *     path="backoffice/v1/auth/sign-in",
+     *     summary="Авторизация",
+     *     tags={"Backoffice.Authentication"},
+     *     operationId="signIn",
+     *     @OA\Parameter(
+     *          required=true,
+     *          in="header",
+     *          name="client-id",
+     *          @OA\Schema(type="string", example=""),
+     *     ),
+     *     @OA\Parameter(
+     *          required=true,
+     *          in="header",
+     *          name="client-secret",
+     *          @OA\Schema(type="string", example=""),
+     *     ),
+     *     @OA\RequestBody(
+     *          required=true,
+     *          @OA\MediaType(
+     *              mediaType="multipart/form-data",
+     *              @OA\Schema(ref="#/components/schemas/SignInRequest"),
+     *          )
+     *     ),
+     *     @OA\Response(
+     *          response=200,
+     *          description="Ok",
+     *          @OA\JsonContent(ref="#/components/schemas/AuthResponse"),
+     *          @OA\Header(header="cookies", ref="#/components/headers/RefreshToken"),
+     *     ),
+     *     @OA\Response(
+     *          response=422,
+     *          description="Unprocessable Entity",
+     *          @OA\JsonContent(
+     *              @OA\Property(
+     *                  property="message",
+     *                  type="string",
+     *                  example="The given data was invalid.",
+     *              ),
+     *              @OA\Property(
+     *                  property="errors",
+     *                  @OA\Property(
+     *                      property="email",
+     *                      type="array",
+     *                      @OA\Items(
+     *                          type="string",
+     *                          example="These credentials do not match our records.",
+     *                      ),
+     *                  ),
+     *                  @OA\Property(
+     *                      property="password",
+     *                      type="array",
+     *                      @OA\Items(
+     *                          type="string",
+     *                          example="The password field is required.",
+     *                      ),
+     *                  ),
+     *              ),
+     *          ),
+     *     ),
+     * )
+     *
      * @param SignInRequest $request
      * @return JsonResponse|ValidationException
      * @throws ValidationException
