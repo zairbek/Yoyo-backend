@@ -84,6 +84,7 @@ class SignInController extends ApiController
      */
     public function signIn(SignInRequest $request): JsonResponse|ValidationException
     {
+        // todo: сделать валидацию
         $clientCredentials = [
             'client_id' => $request->header('Client-Id'),
             'client_secret' => $request->header('Client-Secret'),
