@@ -15,7 +15,7 @@ class SignInController extends ApiController
 {
     /**
      *  @OA\Post(
-     *     path="backoffice/v1/auth/sign-in",
+     *     path="/backoffice/v1/auth/sign-in",
      *     summary="Авторизация",
      *     tags={"Backoffice.Authentication"},
      *     operationId="signIn",
