@@ -19,6 +19,7 @@ class RefreshController extends ApiController
      */
     public function refreshToken(Request $request): JsonResponse
     {
+        // Валидация идет в мидлваре
         $clientCredentials = [
             'client_id' => $request->header('client-id'),
             'client_secret' => $request->header('client-secret'),
