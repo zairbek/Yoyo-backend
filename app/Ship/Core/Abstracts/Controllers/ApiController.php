@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Response;
  * )
  * @OA\Server(
  *     description="eBazar Local Server",
- *     url="http://localhost",
+ *     url="http://ebazar.loc",
  * )
  *  @OA\SecurityScheme(
  *     securityScheme="bearerAuth",
@@ -59,7 +59,7 @@ abstract class ApiController extends Controller
      *          example="...456dfertwert345t...",
      *     )
      * ),
-     * 
+     *
      * @param array $tokens
      * @return JsonResponse
      */

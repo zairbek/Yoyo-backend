@@ -12,6 +12,41 @@ use League\OAuth2\Server\Exception\OAuthServerException;
 class RefreshController extends ApiController
 {
     /**
+     * @OA\Post(
+     *     path="/backoffice/v1/auth/refresh-token",
+     *     summary="Refresh access token & refresh token",
+     *     operationId="refreshToken",
+     *     tags={"Backoffice.Authentication"},
+     *     @OA\Parameter(
+     *          required=true,
+     *          in="header",
+     *          name="client-id",
+     *          @OA\Schema(type="string", example=""),
+     *     ),
+     *     @OA\Parameter(
+     *          required=true,
+     *          in="header",
+     *          name="client-secret",
+     *          @OA\Schema(type="string", example=""),
+     *     ),
+     *     @OA\Parameter(
+     *          in="cookie",
+     *          name="refresh-token",
+     *          required=true,
+     *          @OA\Schema(type="string"),
+     *     ),
+     *     @OA\Response(
+     *          response=200,
+     *          description="Ok",
+     *          @OA\JsonContent(ref="#/components/schemas/AuthResponse"),
+     *          @OA\Header(header="cookies", ref="#/components/headers/RefreshToken")
+     *     ),
+     *     @OA\Response(
+     *          response=401,
+     *          description="The refresh token is invalid.",
+     *     ),
+     * ),
+     *
      * @param Request $request
      * @return JsonResponse
      * @throws JsonException

@@ -17,6 +17,29 @@ class SignOutController extends ApiController
     }
 
     /**
+     * @OA\Get(
+     *     path="/backoffice/v1/auth/sign-out",
+     *     tags={ "Backoffice.Authentication" },
+     *     summary="LogOut",
+     *     security={{"bearerAuth": {}}},
+     *     @OA\Response(
+     *          response=204,
+     *          description="No Content",
+     *          @OA\JsonContent(),
+     *     ),
+     *     @OA\Response(
+     *          response=401,
+     *          description="Unauthenticated.",
+     *          @OA\JsonContent(
+     *              @OA\Property(
+     *                  property="message",
+     *                  type="string",
+     *                  example="Unauthenticated.",
+     *              )
+     *          ),
+     *     ),
+     * )
+     *
      * @return JsonResponse
      */
     public function signOut(): JsonResponse
