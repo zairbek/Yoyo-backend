@@ -3,6 +3,7 @@
 namespace App\Containers\Account\UI\API\Backoffice\Tests\Functional;
 
 use App\Containers\Authentication\Adapters\Passport;
+use App\Containers\Authorization\Models\Permission;
 use App\Containers\Authorization\Models\Role;
 use App\Containers\Authorization\Models\UserStatus;
 use App\Containers\User\Models\User;
@@ -24,11 +25,14 @@ class GetAccountControllerTest extends ApiTestCase
     {
         parent::setUp();
 
-        $roles = Role::where('name', 'user')->get();
+        $role = Role::factory()
+            ->has(Permission::factory()->state(['name' => 'user@read', 'guard_name' => 'api']))
+            ->state(['name' => 'user', 'guard_name' => 'api'])
+        ;
 
         $this->user = User::factory()
             ->for(UserStatus::factory()->state(['name' => UserStatus::ACTIVE]))
-//            ->has($roles)
+            ->has($role)
             ->create();
 
         $client = ClientFactory::new()->asPasswordClient()->create();
