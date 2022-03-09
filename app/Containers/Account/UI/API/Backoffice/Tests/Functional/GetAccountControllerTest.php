@@ -3,14 +3,19 @@
 namespace App\Containers\Account\UI\API\Backoffice\Tests\Functional;
 
 use App\Containers\Authentication\Adapters\Passport;
+use App\Containers\Authorization\Models\Role;
+use App\Containers\Authorization\Models\UserStatus;
 use App\Containers\User\Models\User;
 use App\Containers\User\Tests\ApiTestCase;
+use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Laravel\Passport\Database\Factories\ClientFactory;
 use function dd;
 use function route;
 
 class GetAccountControllerTest extends ApiTestCase
 {
+    use DatabaseMigrations;
+
     private User $user;
 
     private mixed $tokens;
@@ -19,7 +24,12 @@ class GetAccountControllerTest extends ApiTestCase
     {
         parent::setUp();
 
-        $this->user = User::factory()->create();
+        $roles = Role::where('name', 'user')->get();
+
+        $this->user = User::factory()
+            ->for(UserStatus::factory()->state(['name' => UserStatus::ACTIVE]))
+//            ->has($roles)
+            ->create();
 
         $client = ClientFactory::new()->asPasswordClient()->create();
 
