@@ -1,9 +1,9 @@
 <?php
 
+use App\Containers\Account\UI\API\Backoffice\Controllers\AccountController;
 use App\Containers\Authentication\UI\API\Backoffice\Controllers\RefreshController;
 use App\Containers\Authentication\UI\API\Backoffice\Controllers\SignInController;
 use App\Containers\Authentication\UI\API\Backoffice\Controllers\SignOutController;
-use App\Containers\User\UI\API\Backoffice\Controllers\AccountController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -25,9 +25,14 @@ Route::group(['prefix' => 'v1', 'as' => 'backoffice.'], static function () {
         });
         Route::get('sign-out', [SignOutController::class, 'signOut'])->middleware('auth:api')->name('signOut');
     });
-    Route::group(['middleware' => 'auth:api'], static function () {
+
+    Route::group(['middleware' => ['auth:api', 'account.status']], static function () {
         Route::group(['prefix' => 'account'], static function () {
             Route::get('/', [AccountController::class, 'get'])->name('account');
         });
+    });
+
+    Route::get('test', static function () {
+        
     });
 });

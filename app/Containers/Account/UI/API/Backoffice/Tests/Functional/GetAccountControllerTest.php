@@ -1,11 +1,13 @@
 <?php
 
-namespace App\Containers\User\UI\API\Backoffice\Tests\Functional;
+namespace App\Containers\Account\UI\API\Backoffice\Tests\Functional;
 
 use App\Containers\Authentication\Adapters\Passport;
 use App\Containers\User\Models\User;
 use App\Containers\User\Tests\ApiTestCase;
 use Laravel\Passport\Database\Factories\ClientFactory;
+use function dd;
+use function route;
 
 class GetAccountControllerTest extends ApiTestCase
 {

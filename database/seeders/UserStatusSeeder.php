@@ -2,14 +2,15 @@
 
 namespace Database\Seeders;
 
+use App\Containers\Authorization\Models\UserStatus;
 use App\Containers\Authorization\Repositories\UserStatusRepository;
 use Illuminate\Database\Seeder;
 
 class UserStatusSeeder extends Seeder
 {
     public const USER_STATUSES = [
-        'active' => ['title' => 'Active'],
-        'block' => ['title' => 'Block'],
+        UserStatus::ACTIVE => ['title' => 'Active'],
+        UserStatus::BLOCK => ['title' => 'Block'],
     ];
 
     /**

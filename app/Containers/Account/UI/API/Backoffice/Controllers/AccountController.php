@@ -1,12 +1,10 @@
 <?php
 
-namespace App\Containers\User\UI\API\Backoffice\Controllers;
+namespace App\Containers\Account\UI\API\Backoffice\Controllers;
 
-use App\Containers\User\UI\API\Backoffice\Resources\AccountResource;
+use App\Containers\Account\Repositories\AccountRepository;
 use App\Ship\Core\Abstracts\Controllers\ApiController;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Response;
 
 class AccountController extends ApiController
 {
@@ -47,10 +45,9 @@ class AccountController extends ApiController
      *
      * @return JsonResponse
      */
-    public function get()
+    public function get(AccountRepository $repository)
     {
-        $user = Auth::guard('api')->user();
-
+        $user = $repository->getAuthUser();
         /**
          * OA\Schema(
          *     schema="getProfile",
@@ -59,9 +56,9 @@ class AccountController extends ApiController
          *     OA\Property(
          *         property="permissions",
          *         OA\Items(ref="#/components/schemas/PermissionMiniInfoTransformer")),
-         *     ),
+         *     )
          * )
          */
-        return response()->json(new AccountResource($user));
+        return new JsonResponse($user->toArray());
     }
 }

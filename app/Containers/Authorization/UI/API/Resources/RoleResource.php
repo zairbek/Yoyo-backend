@@ -1,14 +1,13 @@
 <?php
 
-namespace App\Containers\User\UI\API\Backoffice\Resources;
-
+namespace App\Containers\Authorization\UI\API\Resources;
 
 use App\Ship\Core\Abstracts\Resources\JsonResource;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
 use JsonSerializable;
 
-class AccountResource extends JsonResource
+class RoleResource extends JsonResource
 {
     /**
      * Transform the resource into an array.

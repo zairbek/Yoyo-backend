@@ -5,8 +5,10 @@ namespace App\Containers\User\Repositories;
 use App\Containers\Authorization\Repositories\RoleRepository;
 use App\Containers\User\Models\User;
 use App\Ship\Core\Abstracts\Repositories\Repository;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Throwable;
 
@@ -52,7 +54,6 @@ class UserRepository extends Repository
             throw $exception;
         }
     }
-
 
     public function updateOrCreate($attributes, $value = [], $role = RoleRepository::DEFAULT_ROLE): Model
     {

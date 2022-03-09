@@ -59,6 +59,16 @@ abstract class ApiController extends Controller
      *          example="...456dfertwert345t...",
      *     )
      * ),
+     *  @OA\Get(
+     *     path="/backoffice/v1/test",
+     *     summary="Test",
+     *     tags={"Backoffice.Test"},
+     *     @OA\Response(
+     *          response=200,
+     *          description="Ok",
+     *          @OA\JsonContent(),
+     *     ),
+     * )
      *
      * @param array $tokens
      * @return JsonResponse

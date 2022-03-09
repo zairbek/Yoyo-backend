@@ -2,6 +2,7 @@
 
 namespace App\Ship\Kernels;
 
+use App\Containers\Authentication\Middlewares\UserStatusCheckMiddleware;
 use Illuminate\Foundation\Http\Kernel;
 
 class HttpKernel extends Kernel
@@ -63,6 +64,7 @@ class HttpKernel extends Kernel
         'signed' => \Illuminate\Routing\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
-        'client.credentials' => \App\Containers\Authentication\Middlewares\AuthorizedClientApp::class
+        'client.credentials' => \App\Containers\Authentication\Middlewares\AuthorizedClientApp::class,
+        'account.status' => UserStatusCheckMiddleware::class
     ];
 }

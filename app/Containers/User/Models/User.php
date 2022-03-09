@@ -2,6 +2,7 @@
 
 namespace App\Containers\User\Models;
 
+use App\Containers\Authorization\Models\UserStatus;
 use App\Containers\User\Enums\Gender;
 use App\Ship\Core\Abstracts\Models\UserModel;
 use Database\Factories\UserFactory;
@@ -9,13 +10,18 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Contracts\Hashing\Hasher;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
+use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\Permission\Traits\HasRoles;
 
-class User extends UserModel
+/**
+ * @property UserStatus $userStatus
+ */
+class User extends UserModel implements HasMedia
 {
     use HasFactory;
     use Notifiable;
@@ -93,5 +99,10 @@ class User extends UserModel
             get: fn($value) => $this->load('media')->getMedia('avatar')->first(),
             set: fn($value) => $this->addMedia($value)->toMediaCollection('avatar')
         );
+    }
+
+    public function userStatus(): BelongsTo
+    {
+        return $this->belongsTo(UserStatus::class);
     }
 }
