@@ -20,5 +20,6 @@ class DatabaseSeeder extends Seeder
         $this->call(UserStatusSeeder::class);
         $this->call(UserSeeder::class);
         $this->call(FakeUserSeeder::class);
+        $this->call(UserStatusOptionSeeder::class);
     }
 }

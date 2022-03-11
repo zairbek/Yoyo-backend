@@ -176,7 +176,7 @@ return [
         // App\Ship\Providers\BroadcastServiceProvider::class,
         App\Ship\Providers\EventServiceProvider::class,
         App\Ship\Providers\RouteServiceProvider::class,
-
+        App\Ship\Providers\ModelServiceProvider::class
     ],
 
     /*
