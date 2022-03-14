@@ -10,7 +10,6 @@ use Cache;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Facades\Auth;
 use RuntimeException;
-use Spatie\DataTransferObject\Exceptions\UnknownProperties;
 
 class AccountRepository
 {
@@ -30,18 +29,17 @@ class AccountRepository
         $user = $this->authUser();
 
         return Cache::remember($user->id, 2, static function () use ($user) {
-            return $user->load('roles.permissions');
+            return $user->load('roles.permissions', 'media');
         });
     }
 
     /**
-     * @throws UnknownProperties
      */
     public function getAuthUser(): Structure
     {
-        $user = $this->prepareAuthUser()->toArray();
+        $user = $this->prepareAuthUser()->append(['avatar']);
 
-        return new GetAccountStructure($user);
+        return new GetAccountStructure($user->toArray());
     }
 
     public function isAccountActive(): bool

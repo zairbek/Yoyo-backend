@@ -2,11 +2,7 @@
 
 namespace App\Containers\Account\Structures;
 
-use App\Containers\Authorization\Collections\RolesCollection;
-use App\Containers\Authorization\Structures\Casts\RolesStructureCast;
-use App\Containers\Authorization\Structures\GetAccountUserStatusStructure;
 use App\Ship\Core\Abstracts\Structures\Structure;
-use Spatie\DataTransferObject\Attributes\CastWith;
 
 class GetAccountStructure extends Structure
 {
@@ -22,7 +18,5 @@ class GetAccountStructure extends Structure
     public string|null $gender;
     public string $status;
 
-    /** @var RolesCollection[] */
-    #[CastWith(RolesStructureCast::class)]
-    public RolesCollection $roles;
+    public array $roles;
 }

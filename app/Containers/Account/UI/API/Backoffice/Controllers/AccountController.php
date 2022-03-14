@@ -5,7 +5,6 @@ namespace App\Containers\Account\UI\API\Backoffice\Controllers;
 use App\Containers\Account\Repositories\AccountRepository;
 use App\Ship\Core\Abstracts\Controllers\ApiController;
 use Illuminate\Http\JsonResponse;
-use Spatie\DataTransferObject\Exceptions\UnknownProperties;
 
 class AccountController extends ApiController
 {
@@ -45,7 +44,6 @@ class AccountController extends ApiController
      * ),
      *
      * @return JsonResponse
-     * @throws UnknownProperties
      */
     public function get(AccountRepository $repository)
     {
