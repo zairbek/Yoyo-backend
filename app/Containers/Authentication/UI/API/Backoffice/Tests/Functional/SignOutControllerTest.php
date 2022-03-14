@@ -6,6 +6,7 @@ use App\Containers\Authentication\Adapters\Passport;
 use App\Containers\User\Models\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Support\Collection;
 use Laravel\Passport\Database\Factories\ClientFactory;
 use Laravel\Passport\Passport as PassportModel;
@@ -13,6 +14,8 @@ use Symfony\Component\HttpFoundation\Cookie;
 
 class SignOutControllerTest extends \App\Containers\Authentication\Tests\ApiTestCase
 {
+    use DatabaseMigrations;
+
     private mixed $tokens;
 
     private Collection|Model $client;

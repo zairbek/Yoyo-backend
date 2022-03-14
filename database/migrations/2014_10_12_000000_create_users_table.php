@@ -1,5 +1,6 @@
 <?php
 
+use App\Containers\User\Enums\Status;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -27,7 +28,8 @@ return new class extends Migration
             $table->dateTime('birthday')->nullable()->comment('Дата рождение');
             $table->enum('gender', ['male', 'female'])->nullable()->comment('Пол');
 
-            $table->foreignId('user_status_id')->nullable()->constrained()->nullOnDelete();
+            $table->enum('status', [Status::Active->value, Status::Block->value])->default('active')
+                ->comment('status пользователя');
 
             $table->json('properties')->nullable()->comment('Вдруг понадобится что-то добавить');
 

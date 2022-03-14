@@ -20,9 +20,9 @@ class GetAccountStructure extends Structure
     public string|null $avatar;
     public string|null $birthday;
     public string|null $gender;
+    public string $status;
 
     /** @var RolesCollection[] */
     #[CastWith(RolesStructureCast::class)]
     public RolesCollection $roles;
-    public GetAccountUserStatusStructure $user_status;
 }

@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Containers\User\Enums\Gender;
+use App\Containers\User\Enums\Status;
 use App\Containers\User\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
@@ -34,6 +35,7 @@ class UserFactory extends Factory
             'phone_number' => $this->faker->numerify('7#########'),
             'birthday' => $this->faker->dateTime,
             'gender' => $this->faker->randomElement(Gender::cases()),
+            'status' => $this->faker->randomElement(Status::cases()),
             'online_at' => $this->faker->dateTime,
             'created_at' => $this->faker->dateTime,
             'updated_at' => $this->faker->dateTime,

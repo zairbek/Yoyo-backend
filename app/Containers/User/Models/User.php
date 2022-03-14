@@ -2,15 +2,15 @@
 
 namespace App\Containers\User\Models;
 
-use App\Containers\Authorization\Models\UserStatus;
 use App\Containers\User\Enums\Gender;
+use App\Containers\User\Enums\Status;
 use App\Ship\Core\Abstracts\Models\UserModel;
+use Carbon\Carbon;
 use Database\Factories\UserFactory;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Contracts\Hashing\Hasher;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
@@ -19,7 +19,21 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\Permission\Traits\HasRoles;
 
 /**
- * @property UserStatus $userStatus
+ * @property string $login
+ * @property string $email
+ * @property string $password
+ * @property string $first_name
+ * @property string $last_name
+ * @property string $middle_name
+ * @property string $phone_number
+ * @property string $avatar
+ * @property Carbon $birthday
+ * @property string $gender
+ * @property string $status
+ * @property array  $properties
+ * @property Carbon $online_at
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
  */
 class User extends UserModel implements HasMedia
 {
@@ -46,7 +60,7 @@ class User extends UserModel implements HasMedia
         'avatar',
         'birthday',
         'gender',
-        'active',
+        'status',
         'properties',
     ];
 
@@ -73,7 +87,8 @@ class User extends UserModel implements HasMedia
         'birthday' => 'datetime:Y.m.d',
         'active' => 'boolean',
         'properties' => 'array',
-        'gender' => Gender::class
+        'gender' => Gender::class,
+        'status' => Status::class,
     ];
 
     protected static function newFactory(): UserFactory
@@ -99,10 +114,5 @@ class User extends UserModel implements HasMedia
             get: fn($value) => $this->load('media')->getMedia('avatar')->first(),
             set: fn($value) => $this->addMedia($value)->toMediaCollection('avatar')
         );
-    }
-
-    public function userStatus(): BelongsTo
-    {
-        return $this->belongsTo(UserStatus::class);
     }
 }

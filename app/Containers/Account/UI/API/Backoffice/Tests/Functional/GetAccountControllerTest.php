@@ -5,7 +5,7 @@ namespace App\Containers\Account\UI\API\Backoffice\Tests\Functional;
 use App\Containers\Authentication\Adapters\Passport;
 use App\Containers\Authorization\Models\Permission;
 use App\Containers\Authorization\Models\Role;
-use App\Containers\Authorization\Models\UserStatus;
+use App\Containers\User\Enums\Status;
 use App\Containers\User\Models\User;
 use App\Containers\User\Tests\ApiTestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
@@ -31,7 +31,7 @@ class GetAccountControllerTest extends ApiTestCase
         ;
 
         $this->user = User::factory()
-            ->for(UserStatus::factory()->state(['name' => UserStatus::ACTIVE]))
+            ->state(['status' => Status::Active->value])
             ->has($role)
             ->create();
 

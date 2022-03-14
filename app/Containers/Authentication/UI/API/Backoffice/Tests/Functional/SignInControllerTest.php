@@ -5,11 +5,14 @@ namespace App\Containers\Authentication\UI\API\Backoffice\Tests\Functional;
 use App\Containers\Authentication\Tests\ApiTestCase;
 use App\Containers\User\Models\User;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Support\Collection;
 use Laravel\Passport\Database\Factories\ClientFactory;
 
 class SignInControllerTest extends ApiTestCase
 {
+    use DatabaseMigrations;
+
     private User $user;
     private Collection|Model $client;
 
