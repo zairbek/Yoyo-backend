@@ -13,12 +13,14 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Collection;
 use Laravel\Passport\HasApiTokens;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\Permission\Traits\HasRoles;
 
 /**
+ * @property int    $id
  * @property string $login
  * @property string $email
  * @property string $password
@@ -34,6 +36,8 @@ use Spatie\Permission\Traits\HasRoles;
  * @property Carbon $online_at
  * @property Carbon $created_at
  * @property Carbon $updated_at
+ *
+ * @property Collection $roles
  */
 class User extends UserModel implements HasMedia
 {

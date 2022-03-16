@@ -3,9 +3,13 @@
 namespace App\Ship\Core\Abstracts\Structures;
 
 use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Contracts\Support\Jsonable;
+use JetBrains\PhpStorm\Pure;
+use JsonException;
+use JsonSerializable;
 use ReflectionClass;
 
-abstract class Structure implements Arrayable
+abstract class Structure implements Arrayable, Jsonable, JsonSerializable
 {
     public function __construct(array $data)
     {
@@ -21,5 +25,18 @@ abstract class Structure implements Arrayable
     public function toArray(): array
     {
         return get_object_vars($this);
+    }
+
+    /**
+     * @throws JsonException
+     */
+    public function toJson($options = 0): bool|string
+    {
+        return json_encode($this->jsonSerialize(), JSON_THROW_ON_ERROR);
+    }
+
+    #[Pure] public function jsonSerialize(): array
+    {
+        return $this->toArray();
     }
 }
