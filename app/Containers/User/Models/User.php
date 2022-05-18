@@ -34,6 +34,7 @@ use Spatie\Permission\Traits\HasRoles;
  * @property string $status
  * @property array  $properties
  * @property Carbon $online_at
+ * @property string $confirm_code
  * @property Carbon $created_at
  * @property Carbon $updated_at
  *

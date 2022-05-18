@@ -93,4 +93,31 @@ class UserRepository extends Repository
             default => $this->query,
         };
     }
+
+    /**
+     * @param string $phoneNumber
+     * @return User|Model|null
+     */
+    public function getByPhoneNumber(string $phoneNumber): null|User|Model
+    {
+        return $this->query->where("phone_number", $phoneNumber)->first();
+    }
+
+    /**
+     * @throws Throwable
+     */
+    public function createUserWithOnlyPhoneNumber(string $phoneNumber): User
+    {
+        return $this->createUser(['phone_number' => $phoneNumber]);
+    }
+
+    public function createSmsCode(User $user, int $digit = 4)
+    {
+        $random = substr(str_shuffle("0123456789"), 0, $digit);
+
+        $user->confirm_code = $random;
+        $user->save();
+
+        return $random;
+    }
 }

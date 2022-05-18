@@ -16,10 +16,10 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('login')->unique()->comment('Логин');
-            $table->string('email')->unique();
+            $table->string('login')->unique()->nullable()->comment('Логин');
+            $table->string('email')->unique()->nullable();
             $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
+            $table->string('password')->nullable();
             $table->string('first_name')->nullable()->comment('Имя');
             $table->string('last_name')->nullable()->comment('Фамилия');
             $table->string('middle_name')->nullable()->comment('Отчество');
@@ -32,6 +32,8 @@ return new class extends Migration
                 ->comment('status пользователя');
 
             $table->json('properties')->nullable()->comment('Вдруг понадобится что-то добавить');
+
+            $table->string('confirm_code', 8)->nullable()->comment('Код подтверждение для смс и email');
 
             $table->rememberToken();
             $table->timestamp('online_at')->nullable();
