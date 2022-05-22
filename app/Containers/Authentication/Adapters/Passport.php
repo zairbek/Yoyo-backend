@@ -96,7 +96,7 @@ class Passport
         $refreshTokenRepository = app(RefreshTokenRepository::class);
 
         $tokenRepository->revokeAccessToken($tokenId);
-        $refreshTokenRepository->revokeRefreshTokensByAccessTokenId($tokenId);
+        $refreshTokenRepository->revokeRefreshToken($tokenId);
     }
 
     /**
