@@ -116,11 +116,9 @@ class Passport
         $tokens = json_decode($bearerToken->getBody()->__toString(), true, 512, JSON_THROW_ON_ERROR);
 
         return [
-            'access_token' => [
-                'token_type' => $tokens['token_type'],
-                'expires_in' => $tokens['expires_in'],
-                'access_token' => $tokens['access_token'],
-            ],
+            'token_type' => $tokens['token_type'],
+            'expires_in' => $tokens['expires_in'],
+            'access_token' => $tokens['access_token'],
             'refresh_token' => $tokens['refresh_token']
         ];
     }
