@@ -7,13 +7,9 @@ use App\Containers\Authentication\Actions\AuthViaPhoneNumberSendSmsAction;
 use App\Containers\Authentication\UI\API\Public\Requests\SendSmsRequest;
 use App\Containers\Authentication\UI\API\Public\Requests\SignInRequest;
 use App\Ship\Core\Abstracts\Controllers\ApiController;
-use App\Containers\Authentication\Adapters\Passport as PassportAdapter;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Validation\ValidationException;
-use JsonException;
-use League\OAuth2\Server\Exception\OAuthServerException;
 
 class SignInController extends ApiController
 {
@@ -106,30 +102,6 @@ class SignInController extends ApiController
     {
         $res = app(AuthViaPhoneNumberConfirmCodeAction::class)->run($request);
 
-        return Response::json($res);
-    }
-
-    /**
-     * Attempt to log the user into the application.
-     *
-     * @param array $credentials
-     * @return bool
-     */
-    protected function attemptLogin(array $credentials): bool
-    {
-        return Auth::guard()->attempt($credentials);
-    }
-
-    /**
-     * Get the failed login response instance.
-     * @param array $request
-     * @return ValidationException
-     * @throws ValidationException
-     */
-    protected function sendFailedLoginResponse(array $request): ValidationException
-    {
-        throw ValidationException::withMessages([
-            'email' => [trans('auth.failed')],
-        ]);
+        return $this->sendLoginResponse($res);
     }
 }

@@ -17,25 +17,26 @@ class AuthViaPhoneNumberConfirmCodeAction extends Action
      */
     public function run(SignInRequest $request): array
     {
-        try {
-            $user = app(FindUserByPhoneNumberTask::class)->run($request->get('phone'));
+        $user = app(FindUserByPhoneNumberTask::class)->run($request->get('phone'));
 
-            if (!$user) {
-                throw new RuntimeException('user not found');
-            }
-
-            if (! app(AttemptLoginWithPhoneAndCodeTask::class)->run($user, $request->get('code'))) {
-                throw ValidationException::withMessages([
-                    'phone' => [trans('auth.failed')],
-                ]);
-            }
-
-            return app(GenerateTokensByUserAction::class)->run($user, $request->header('client-id'));
-        } catch (\Exception $exception) {
-            return [
-                'status' => 'fail',
-                'message' => $exception->getMessage()
-            ];
+        if (! $user) {
+            $this->validationMessage();
         }
+
+        if (! app(AttemptLoginWithPhoneAndCodeTask::class)->run($user, $request->get('code'))) {
+            $this->validationMessage();
+        }
+
+        return app(GenerateTokensByUserAction::class)->run($user, $request->header('client-id'));
+    }
+
+    /**
+     * @throws ValidationException
+     */
+    private function validationMessage(): ValidationException
+    {
+        return throw ValidationException::withMessages([
+            'phone' => [trans('auth.failed')],
+        ]);
     }
 }
