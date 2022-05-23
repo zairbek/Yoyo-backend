@@ -18,12 +18,12 @@ class Cookie
     public static function make(string $refreshToken): HttpCookie
     {
         return HttpCookie::create(
-            self::REFRESH_TOKEN_COOKIE_NAME,
-            $refreshToken,
-            now()->addSeconds(config('passport.tokens.refresh_token_lifetime', 86400)),
-            null,
-            config('passport.tokens.refresh_token_cache_domain'),
-            true
+            name:self::REFRESH_TOKEN_COOKIE_NAME,
+            value: $refreshToken,
+            expire: now()->addSeconds(config('passport.tokens.refresh_token_lifetime', 86400)),
+            path: null,
+            domain: config('passport.tokens.refresh_token_cache_domain'),
+            secure: true,
         );
     }
 
