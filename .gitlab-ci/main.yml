@@ -9,7 +9,6 @@
     IMAGE_NGINX: $CI_REGISTRY_IMAGE/dev/nginx:$CI_COMMIT_SHORT_SHA
     IMAGE_WORKSPACE: $CI_REGISTRY_IMAGE/dev/workspase:$CI_COMMIT_SHORT_SHA
     IMAGE_REDIS: $CI_REGISTRY_IMAGE/dev/redis:$CI_COMMIT_SHORT_SHA
-    IMAGE_POSTGRES: $CI_REGISTRY_IMAGE/dev/postgres:$CI_COMMIT_SHORT_SHA
 
 .dev: &dev
   tags:
@@ -127,22 +126,6 @@ build:redis:
     <<: *branch
     <<: *redis_only
 
-### Build Mysql Docker Image #################################
-build:postgres:
-  stage: build:images
-  <<: *dev
-  extends:
-    - .cache
-    - .login
-  script:
-    - docker build -t $IMAGE_POSTGRES -f .docker/postgres/Dockerfile .
-    - docker push $IMAGE_POSTGRES
-  cache:
-    policy: pull
-  only:
-    <<: *branch
-    <<: *postgres_only
-
 ###############################################################
 ### Deploying To Development ##################################
 
@@ -243,7 +226,6 @@ build:postgres:
     - docker:dind
   extends: .login
   script:
-    - docker pull ${IMAGE_POSTGRES}
     - docker stack deploy --with-registry-auth -c .docker/postgres/docker-stack.yml ${CI_PROJECT_NAME}
   only:
     <<: *branch
