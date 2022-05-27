@@ -68,7 +68,6 @@ build:app:
   image: $IMAGE_PHP_FPM_LATEST
   script:
     - composer check-platform-req
-    - composer config http-basic.gitlab.com ___token___ $GITLAB_TOKEN
     - composer install --no-progress
 #    - npm install --no-progress
 #    - npm run production
