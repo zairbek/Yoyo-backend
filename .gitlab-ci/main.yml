@@ -9,16 +9,16 @@
     IMAGE_NGINX: $CI_REGISTRY_IMAGE/dev/nginx:$CI_COMMIT_SHORT_SHA
     IMAGE_WORKSPACE: $CI_REGISTRY_IMAGE/dev/workspase:$CI_COMMIT_SHORT_SHA
     IMAGE_REDIS: $CI_REGISTRY_IMAGE/dev/redis:$CI_COMMIT_SHORT_SHA
-    IMAGE_MYSQL: $CI_REGISTRY_IMAGE/dev/mysql:$CI_COMMIT_SHORT_SHA
+    IMAGE_POSTGRES: $CI_REGISTRY_IMAGE/dev/postgres:$CI_COMMIT_SHORT_SHA
 
 .dev: &dev
   tags:
-    - backend-future-develop
+    - dev-regru
   <<: *variables
 
 .branch: &branch
   refs:
-    - master
+    - main
 
 .environment: &environment
   environment:
@@ -29,19 +29,19 @@
     - .docker/redis/**/*
     - .gitlab-ci.yml
 
-.mysql_only: &mysql_only
+.postgres_only: &postgres_only
   changes:
-    - .docker/mysql/**/*
+    - .docker/postgres/**/*
     - .gitlab-ci.yml
 
 .nginx_only: &nginx_only
   changes:
     - .docker/nginx/**/*
-    - webpack.mix.js
-    - package.json
-    - resources/js/**/*
-    - resources/sass/**/*
-    - resources/img/**/*
+#    - webpack.mix.js
+#    - package.json
+#    - resources/js/**/*
+#    - resources/sass/**/*
+#    - resources/img/**/*
     - .gitlab-ci.yml
 
 
@@ -67,14 +67,14 @@ build:app:
   extends: .cache
   image: $IMAGE_PHP_FPM_LATEST
   script:
-#    - composer check-platform-req
+    - composer check-platform-req
     - composer config http-basic.gitlab.com ___token___ $GITLAB_TOKEN
     - composer install --no-progress
-    - npm install --no-progress
-    - npm run production
+#    - npm install --no-progress
+#    - npm run production
   artifacts:
     paths:
-      - public/dist
+#      - public/dist
       - vendor/
   only:
     <<: *branch
@@ -129,20 +129,20 @@ build:redis:
     <<: *redis_only
 
 ### Build Mysql Docker Image #################################
-build:mysql:
+build:postgres:
   stage: build:images
   <<: *dev
   extends:
     - .cache
     - .login
   script:
-    - docker build -t $IMAGE_MYSQL -f .docker/mysql/Dockerfile .
-    - docker push $IMAGE_MYSQL
+    - docker build -t $IMAGE_POSTGRES -f .docker/postgres/Dockerfile .
+    - docker push $IMAGE_POSTGRES
   cache:
     policy: pull
   only:
     <<: *branch
-    <<: *mysql_only
+    <<: *postgres_only
 
 ###############################################################
 ### Deploying To Development ##################################
@@ -235,7 +235,7 @@ build:mysql:
     - build:redis
 
 ### Deploying Redis Image #####################################
-'Deploying MYSQL to dev':
+'Deploying POSTGRES to dev':
   stage: deploy
   <<: *dev
   <<: *environment
@@ -244,11 +244,11 @@ build:mysql:
     - docker:dind
   extends: .login
   script:
-    - docker pull ${IMAGE_MYSQL}
-    - docker stack deploy --with-registry-auth -c .docker/mysql/docker-stack.yml ${CI_PROJECT_NAME}
+    - docker pull ${IMAGE_POSTGRES}
+    - docker stack deploy --with-registry-auth -c .docker/postgres/docker-stack.yml ${CI_PROJECT_NAME}
   only:
     <<: *branch
-    <<: *mysql_only
+    <<: *postgres_only
   needs:
     - build:mysql
 

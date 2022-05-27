@@ -24,5 +24,5 @@ stages:
     - echo $CI_JOB_TOKEN | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
 
 include:
-  - local: '/.gitlab-ci/master.yml'
+  - local: '/.gitlab-ci/main.yml'
 
