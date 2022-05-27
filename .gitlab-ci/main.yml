@@ -230,8 +230,6 @@ build:redis:
   only:
     <<: *branch
     <<: *postgres_only
-  needs:
-    - build:postgres
 
 ################################################################
 ### Configuring Workspace #######################################
