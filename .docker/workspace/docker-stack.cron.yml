@@ -10,9 +10,9 @@ services:
       - $STORAGE_DIR/docker/storage/app:/var/www/storage/app:z
     environment:
       - CONTAINER_ROLE=cron
-      - DB_HOST
-      - DB_DATABASE=$DB_NAME
-      - DB_USERNAME=$DB_LOGIN
+      - DB_HOST=postgres
+      - DB_DATABASE
+      - DB_USERNAME
       - DB_PASSWORD
       # Mail
       - MAIL_USERNAME=$SMTP_LOGIN

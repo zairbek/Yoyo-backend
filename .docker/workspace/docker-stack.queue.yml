@@ -10,7 +10,7 @@ services:
       - $STORAGE_DIR/docker/storage/app:/var/www/storage/app:z
     environment:
       - CONTAINER_ROLE=queue
-      - DB_HOST
+      - DB_HOST=postgres
       - DB_DATABASE=$DB_NAME
       - DB_USERNAME=$DB_LOGIN
       - DB_PASSWORD
