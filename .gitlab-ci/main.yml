@@ -250,7 +250,7 @@ build:postgres:
     <<: *branch
     <<: *postgres_only
   needs:
-    - build:mysql
+    - build:postgres
 
 ################################################################
 ### Configuring Workspace #######################################
