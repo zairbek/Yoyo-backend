@@ -22,9 +22,9 @@ class Cookie
             value: $refreshToken,
             expire: now()->addSeconds(config('passport.tokens.refresh_token_lifetime', 86400)),
             path: null,
-            domain: config('passport.tokens.refresh_token_cache_domain'),
             secure: true,
         );
+        //domain: config('passport.tokens.refresh_token_cache_domain'),
     }
 
     /**
